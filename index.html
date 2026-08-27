@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>स्मार्ट किराना बिलिंग & इन्वेंट्री सिस्टम</title>
     <!-- बारकोड और QR स्कैनर लाइब्रेरी (Html5-Qrcode) -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
@@ -17,74 +17,87 @@
             --card-bg: #ffffff;
             --text-main: #1f2937;
         }
+        * { box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg-gradient);
             margin: 0;
-            padding: 15px;
+            padding: 8px;
             color: var(--text-main);
             min-height: 100vh;
         }
         .container {
-            max-width: 950px;
+            width: 100%;
+            max-width: 100%;
             margin: auto;
             background: var(--card-bg);
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        h2, h3 { color: var(--primary); text-align: center; margin-top: 0; }
+        @media(min-width: 768px) {
+            .container { max-width: 950px; padding: 25px; border-radius: 16px; }
+            body { padding: 15px; }
+        }
+        h2, h3 { color: var(--primary); text-align: center; margin-top: 0; font-size: 1.25rem; }
+        @media(min-width: 768px) { h2, h3 { font-size: 1.5rem; } }
         .card { 
             background: #f9fafb; 
             border: 1px solid #e5e7eb; 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-bottom: 20px; 
+            padding: 12px; 
+            border-radius: 10px; 
+            margin-bottom: 15px; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
+        @media(min-width: 768px) { .card { padding: 20px; border-radius: 12px; margin-bottom: 20px; } }
         .btn { 
-            padding: 12px 20px; 
-            font-size: 17px; 
+            padding: 12px 16px; 
+            font-size: 16px; 
             font-weight: 600; 
             border: none; 
             border-radius: 8px; 
             cursor: pointer; 
             color: white; 
             transition: all 0.2s ease; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 100%;
         }
+        @media(min-width: 768px) { .btn { width: auto; } }
         .btn-success { background-color: var(--success); }
         .btn-danger { background-color: var(--danger); }
         .btn-warning { background-color: var(--warning); color: #fff; }
         .btn-primary { background-color: var(--primary); }
         .btn-secondary { background-color: #6b7280; }
-        .btn:hover { transform: translateY(-1px); opacity: 0.95; }
+        .btn:active { transform: scale(0.98); }
         
         input, select { 
             width: 100%; 
-            padding: 14px; 
-            margin: 8px 0 15px 0; 
-            font-size: 16px; 
+            padding: 12px; 
+            margin: 6px 0 12px 0; 
+            font-size: 16px; /* Prevents auto-zoom on iOS */
             border: 2px solid #e5e7eb; 
             border-radius: 8px; 
-            box-sizing: border-box; 
             background: #fff;
             transition: border-color 0.2s;
         }
         input:focus, select:focus { border-color: var(--primary); outline: none; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 8px; overflow: hidden; }
-        th, td { border: 1px solid #e5e7eb; padding: 12px; text-align: center; font-size: 15px; }
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; min-width: 450px; }
+        th, td { border: 1px solid #e5e7eb; padding: 10px 8px; text-align: center; font-size: 14px; }
         th { background-color: var(--primary); color: white; font-weight: 600; }
         
-        .flex-row { display: flex; gap: 12px; flex-wrap: wrap; }
+        .flex-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .flex-row > * { flex: 1 1 100%; }
+        @media(min-width: 600px) { .flex-row > * { flex: 1; } }
+        
         .hidden { display: none; }
         
-        .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f3f4f6; padding-bottom: 12px; margin-bottom: 20px; }
+        .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; margin-bottom: 15px; }
         .menu-container { position: relative; display: inline-block; }
-        .menu-btn { background-color: #4b5563; color: white; padding: 10px 18px; font-size: 20px; border: none; cursor: pointer; border-radius: 8px; }
-        .menu-content { display: none; position: absolute; right: 0; background-color: white; min-width: 280px; box-shadow: 0px 8px 20px rgba(0,0,0,0.15); z-index: 10; border-radius: 8px; overflow: hidden; border: 1px solid #e5e7eb; }
-        .menu-content button { color: #374151; padding: 14px 18px; text-decoration: none; display: block; width: 100%; border: none; background: none; text-align: left; font-size: 16px; cursor: pointer; font-weight: 500; }
+        .menu-btn { background-color: #4b5563; color: white; padding: 8px 14px; font-size: 18px; border: none; cursor: pointer; border-radius: 8px; width: auto; }
+        .menu-content { display: none; position: absolute; right: 0; background-color: white; width: 260px; max-width: 90vw; box-shadow: 0px 8px 20px rgba(0,0,0,0.15); z-index: 100; border-radius: 8px; overflow: hidden; border: 1px solid #e5e7eb; }
+        .menu-content button { color: #374151; padding: 12px 16px; text-decoration: none; display: block; width: 100%; border: none; background: none; text-align: left; font-size: 15px; cursor: pointer; font-weight: 500; }
         .menu-content button:hover { background-color: #f3f4f6; color: var(--primary); }
         .show { display: block; }
         .tab-section { display: none; }
@@ -92,7 +105,7 @@
 
         .upload-box {
             border: 2px dashed var(--primary);
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             border-radius: 10px;
             background: #eef2ff;
@@ -101,10 +114,12 @@
         
         #scanner-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 100%;
             margin: 10px auto;
             display: none;
         }
+        #reader { width: 100% !important; }
+        #reader__dashboard_section_csr button { padding: 8px 12px; background: var(--primary); color: white; border: none; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -113,7 +128,7 @@
     <!-- 1. लॉगिन सेक्शन -->
     <div id="loginSection" class="card" style="background: linear-gradient(to bottom, #ffffff, #f8fafc);">
         <h2>🔐 दुकान सुरक्षा & सब्सक्रिप्शन लॉगिन</h2>
-        <p style="text-align: center; color: #6b7280; margin-bottom: 20px;">अपनी गूगल शीट से जुड़ी ड्राइवर आईडी और पासवर्ड दर्ज करें</p>
+        <p style="text-align: center; color: #6b7280; margin-bottom: 15px; font-size: 14px;">अपनी गूगल शीट से जुड़ी ड्राइवर आईडी और पासवर्ड दर्ज करें</p>
         
         <label><b>ड्राइवर आईडी (Driver ID):</b></label>
         <input type="text" id="driverIdInput" placeholder="जैसे: DRIVER01">
@@ -121,14 +136,14 @@
         <label><b>पासवर्ड (Password):</b></label>
         <input type="password" id="passInput" placeholder="अपना पासवर्ड दर्ज करें">
         
-        <button class="btn btn-primary" style="width:100%; margin-top: 10px; padding: 15px;" onclick="verifyOnlineLogin()">वेरीफाई & लॉगिन करें</button>
-        <p id="loginStatusMsg" style="color: var(--danger); text-align: center; font-weight: bold; margin-top: 15px;"></p>
+        <button class="btn btn-primary" style="width:100%; margin-top: 10px;" onclick="verifyOnlineLogin()">वेरीफाई & लॉगिन करें</button>
+        <p id="loginStatusMsg" style="color: var(--danger); text-align: center; font-weight: bold; margin-top: 15px; font-size: 14px;"></p>
     </div>
 
     <!-- 2. मुख्य ऐप डैशबोर्ड -->
     <div id="appSection" class="hidden">
         <div class="header-bar">
-            <h2 id="shopTitleHeader" style="margin: 0; color: var(--primary);">🛒 किराना स्मार्ट सिस्टम</h2>
+            <h2 id="shopTitleHeader" style="margin: 0; color: var(--primary); font-size: 1.1rem;">🛒 किराना स्मार्ट सिस्टम</h2>
             
             <div class="menu-container">
                 <button onclick="toggleMenu()" class="menu-btn">☰ मेनू</button>
@@ -154,103 +169,107 @@
                 <h3>🧾 बिलिंग काउंटर</h3>
                 
                 <!-- कस्टमर सिलेक्शन सेक्शन -->
-                <div style="background: #eef2ff; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #c7d2fe;">
-                    <label style="font-size: 14px; color: var(--primary); font-weight: bold;">👤 ग्राहक चुनें या नाम / नंबर टाइप करें:</label>
+                <div style="background: #eef2ff; padding: 10px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #c7d2fe;">
+                    <label style="font-size: 13px; color: var(--primary); font-weight: bold;">👤 ग्राहक चुनें या नाम / नंबर टाइप करें:</label>
                     <div class="flex-row" style="margin-top: 5px;">
-                        <div style="flex:1; position:relative;">
-                            <input type="text" id="custName" placeholder="ग्राहक का नाम टाइप करें..." oninput="filterCustomerSuggestions('name')" style="margin:0;">
+                        <div style="position:relative;">
+                            <input type="text" id="custName" placeholder="ग्राहक का नाम..." oninput="filterCustomerSuggestions('name')" style="margin:0;">
                             <div id="customerSuggestionsBox" style="display:none; position:absolute; background:white; border:1px solid #ccc; width:100%; z-index:99; max-height:150px; overflow-y:auto; border-radius:4px;"></div>
                         </div>
-                        <div style="flex:1; position:relative;">
-                            <input type="text" id="custPhone" placeholder="नंबर के 2-3 अंक या पूरा (9198...)" oninput="filterCustomerSuggestions('phone')" style="margin:0;">
+                        <div style="position:relative;">
+                            <input type="text" id="custPhone" placeholder="मोबाइल नंबर..." oninput="filterCustomerSuggestions('phone')" style="margin:0;">
                             <div id="phoneSuggestionsBox" style="display:none; position:absolute; background:white; border:1px solid #ccc; width:100%; z-index:99; max-height:150px; overflow-y:auto; border-radius:4px;"></div>
                         </div>
                     </div>
-                    <div style="display: flex; gap: 8px; margin-top: 10px;">
-                        <a id="quickWhatsAppBtn" href="#" target="_blank" class="btn btn-success" style="flex:1; padding: 8px; text-align: center; text-decoration: none; font-size: 14px; display:none;">💬 WhatsApp चैट</a>
-                        <a id="quickCallBtn" href="#" class="btn btn-primary" style="flex:1; padding: 8px; text-align: center; text-decoration: none; font-size: 14px; display:none;">📞 डायरेक्ट कॉल</a>
+                    <div style="display: flex; gap: 8px; margin-top: 8px;">
+                        <a id="quickWhatsAppBtn" href="#" target="_blank" class="btn btn-success" style="flex:1; padding: 8px; text-align: center; text-decoration: none; font-size: 13px; display:none;">💬 WhatsApp चैट</a>
+                        <a id="quickCallBtn" href="#" class="btn btn-primary" style="flex:1; padding: 8px; text-align: center; text-decoration: none; font-size: 13px; display:none;">📞 डायरेक्ट कॉल</a>
                     </div>
                 </div>
 
                 <!-- कैटेगरी चयन और यूनिक कोड/बारकोड खोज -->
-                <div class="flex-row" style="margin-top:10px;">
-                    <div style="flex:1;">
-                        <label><b>1. कैटेगरी चुनें:</b></label>
+                <div class="flex-row" style="margin-top:5px;">
+                    <div>
+                        <label style="font-size: 13px;"><b>1. कैटेगरी चुनें:</b></label>
                         <select id="billCategorySelect" onchange="filterProductsByCategory()">
                             <option value="ALL">-- सभी कैटेगरीज --</option>
                         </select>
                     </div>
-                    <div style="flex:2;">
-                        <label><b>2. यूनिक कोड या नाम से खोजें:</b></label>
-                        <div class="flex-row" style="align-items: center; margin: 0;">
-                            <input type="text" id="productSearchInput" placeholder="🔍 यूनिक कोड (उदा: CH1) या नाम..." oninput="searchProductsList()" style="margin:0; padding:12px; flex:2;">
-                            <button class="btn btn-secondary" style="padding: 12px 15px; margin: 0; flex:1;" onclick="startCameraScanner('productSearchInput')">📷 स्कैन</button>
+                    <div>
+                        <label style="font-size: 13px;"><b>2. यूनिक कोड या नाम से खोजें:</b></label>
+                        <div style="display: flex; gap: 6px; align-items: center; margin: 0;">
+                            <input type="text" id="productSearchInput" placeholder="🔍 कोड या नाम..." oninput="searchProductsList()" style="margin:0; flex:1;">
+                            <button class="btn btn-secondary" style="padding: 12px; margin: 0; width: auto;" onclick="startCameraScanner('productSearchInput')">📷 स्कैन</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex-row" style="margin-top:10px;">
-                    <select id="billProductSelect" style="flex:2;" onchange="fillBillDetails()">
+                <div style="margin-top: 8px;">
+                    <select id="billProductSelect" onchange="fillBillDetails()">
                         <option value="">-- सामान चुनें --</option>
                     </select>
-                    
+                </div>
+
+                <div class="flex-row" style="margin-top:5px;">
                     <!-- मात्रा (Quantity) विथ प्लस/माइनस बटन -->
-                    <div style="flex:1;">
-                        <label style="font-size:12px; color:#555; display:block; margin-bottom:-4px;">मात्रा</label>
-                        <div style="display: flex; align-items: center; gap: 4px; margin-top: 8px;">
-                            <button type="button" class="btn btn-secondary" style="padding: 10px 10px; margin: 0; font-size: 16px;" onclick="adjustBillQty(-1)">-</button>
-                            <input type="number" id="billQty" placeholder="Qty" value="1" step="0.001" style="margin: 0; text-align: center;">
-                            <button type="button" class="btn btn-secondary" style="padding: 10px 10px; margin: 0; font-size: 16px;" onclick="adjustBillQty(1)">+</button>
+                    <div>
+                        <label style="font-size:12px; color:#555; display:block;">मात्रा</label>
+                        <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+                            <button type="button" class="btn btn-secondary" style="padding: 10px; margin: 0; width: 40px;" onclick="adjustBillQty(-1)">-</button>
+                            <input type="number" id="billQty" value="1" step="0.001" style="margin: 0; text-align: center;">
+                            <button type="button" class="btn btn-secondary" style="padding: 10px; margin: 0; width: 40px;" onclick="adjustBillQty(1)">+</button>
                         </div>
                     </div>
 
-                    <div style="flex:1;">
-                        <label style="font-size:12px; color:#555; display:block; margin-bottom:-4px;">यूनिट (Kg/Packet/Piece)</label>
-                        <select id="billUnit" style="margin-top:8px;">
+                    <div>
+                        <label style="font-size:12px; color:#555; display:block;">यूनिट</label>
+                        <select id="billUnit" style="margin-top:4px;">
                             <option value="Kg">Kg</option>
                             <option value="Packet">Packet</option>
                             <option value="Piece">Piece</option>
                         </select>
                     </div>
-                    <div style="flex:1;">
-                        <label style="font-size:12px; color:#555; display:block; margin-bottom:-4px;">प्रति यूनिट दाम (₹)</label>
-                        <input type="number" id="billPrice" placeholder="दाम (₹)">
+                    <div>
+                        <label style="font-size:12px; color:#555; display:block;">रेट (₹)</label>
+                        <input type="number" id="billPrice" placeholder="दाम (₹)" style="margin-top:4px;">
                     </div>
                 </div>
                 
-                <button class="btn btn-success" style="width:100%; margin-top:12px;" onclick="addToBill()">➕ बिल में सामान जोड़ें</button>
+                <button class="btn btn-success" style="width:100%; margin-top:10px;" onclick="addToBill()">➕ बिल में सामान जोड़ें</button>
                 
-                <div style="margin-top: 15px; display:flex; gap:6px; flex-wrap:wrap;">
-                    <button class="btn btn-warning" style="flex:1; background:#06b6d4;" onclick="addQuickItem('खुला आइटम', 1)">+₹1 फुटकर</button>
-                    <button class="btn btn-warning" style="flex:1; background:#10b981;" onclick="addQuickItem('खुला आइटम', 2)">+₹2 फुटकर</button>
-                    <button class="btn btn-warning" style="flex:1; background:#3b82f6;" onclick="addQuickItem('खुला आइटम', 5)">+₹5 फुटकर</button>
-                    <button class="btn btn-warning" style="flex:1; background:#8b5cf6;" onclick="addQuickItem('खुला आइटम', 10)">+₹10 फुटकर</button>
-                    <button class="btn btn-warning" style="flex:1; background:#ec4899;" onclick="addQuickItem('खुला आइटम', 20)">+₹20 फुटकर</button>
+                <div style="margin-top: 12px; display:flex; gap:6px; flex-wrap:wrap;">
+                    <button class="btn btn-warning" style="flex:1; min-width: 60px; padding: 8px 4px; font-size: 14px; background:#06b6d4;" onclick="addQuickItem('खुला आइटम', 1)">+₹1</button>
+                    <button class="btn btn-warning" style="flex:1; min-width: 60px; padding: 8px 4px; font-size: 14px; background:#10b981;" onclick="addQuickItem('खुला आइटम', 2)">+₹2</button>
+                    <button class="btn btn-warning" style="flex:1; min-width: 60px; padding: 8px 4px; font-size: 14px; background:#3b82f6;" onclick="addQuickItem('खुला आइटम', 5)">+₹5</button>
+                    <button class="btn btn-warning" style="flex:1; min-width: 60px; padding: 8px 4px; font-size: 14px; background:#8b5cf6;" onclick="addQuickItem('खुला आइटम', 10)">+₹10</button>
+                    <button class="btn btn-warning" style="flex:1; min-width: 60px; padding: 8px 4px; font-size: 14px; background:#ec4899;" onclick="addQuickItem('खुला आइटम', 20)">+₹20</button>
                 </div>
             </div>
 
             <div class="card">
                 <h3>वर्तमान बिल की सूची</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>सामान</th>
-                            <th>मात्रा & यूनिट</th>
-                            <th>रेट</th>
-                            <th>कुल</th>
-                            <th>हटाएं</th>
-                        </tr>
-                    </thead>
-                    <tbody id="billTableBody"></tbody>
-                </table>
-                <h3 style="text-align: right; margin-top:20px; color: var(--success);">कुल योग: ₹<span id="grandTotal">0</span></h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>सामान</th>
+                                <th>मात्रा</th>
+                                <th>रेट</th>
+                                <th>कुल</th>
+                                <th>हटाएं</th>
+                            </tr>
+                        </thead>
+                        <tbody id="billTableBody"></tbody>
+                    </table>
+                </div>
+                <h3 style="text-align: right; margin-top:15px; color: var(--success);">कुल योग: ₹<span id="grandTotal">0</span></h3>
                 
-                <div class="flex-row" style="margin-top: 15px;">
-                    <button class="btn btn-success" style="flex:2; font-size:18px; background-color:#25D366; padding: 14px;" onclick="sendWhatsAppBill(true)">
-                        🟢 WhatsApp पर डिजिटल बिल भेजें
+                <div class="flex-row" style="margin-top: 12px;">
+                    <button class="btn btn-success" style="font-size:16px; background-color:#25D366; padding: 12px;" onclick="sendWhatsAppBill(true)">
+                        🟢 WhatsApp पर बिल भेजें
                     </button>
-                    <button class="btn btn-secondary" style="flex:1; font-size:16px; padding: 14px; background-color:#4b5563;" onclick="sendWhatsAppBill(false)">
-                        💾 सिर्फ सॉफ्टवेयर में सेव करें
+                    <button class="btn btn-secondary" style="font-size:15px; padding: 12px; background-color:#4b5563;" onclick="sendWhatsAppBill(false)">
+                        💾 सॉफ्टवेयर में सेव करें
                     </button>
                 </div>
             </div>
@@ -259,17 +278,17 @@
         <!-- NEW TAB: कस्टमर डायरेक्टरी -->
         <div id="customerMasterTab" class="tab-section">
             <div class="card">
-                <h3>👥 कस्टमर डायरेक्टरी (नाम, नंबर, कॉल & WhatsApp)</h3>
-                <p style="color:#666; font-size:14px;">यहाँ आपके सभी सेव किए गए ग्राहक दिखाई देंगे। आप सीधे कॉल कर सकते हैं या WhatsApp पर बात कर सकते हैं।</p>
+                <h3>👥 कस्टमर डायरेक्टरी</h3>
+                <p style="color:#666; font-size:13px;">यहाँ आपके सभी सेव किए गए ग्राहक दिखाई देंगे।</p>
                 <input type="text" id="customerSearchQuery" placeholder="🔍 ग्राहक का नाम या नंबर खोजें..." onkeyup="renderCustomerDirectory()">
-                <div style="overflow-x:auto;">
+                <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th>ग्राहक का नाम</th>
-                                <th>WhatsApp / मोबाइल नंबर</th>
-                                <th>फर्स्ट/लास्ट संपर्क</th>
-                                <th>एक्शन (कॉल / WhatsApp)</th>
+                                <th>नाम</th>
+                                <th>मोबाइल नंबर</th>
+                                <th>समय</th>
+                                <th>एक्शन</th>
                             </tr>
                         </thead>
                         <tbody id="customerDirectoryTableBody"></tbody>
@@ -281,13 +300,13 @@
         <!-- TAB: सेलिंग रिपोर्ट -->
         <div id="sellingReportTab" class="tab-section">
             <div class="card">
-                <h3>📄 सेलिंग रिपोर्ट (बिक्री की जानकारी)</h3>
-                <p style="color:#666; font-size:14px; margin-top:0;">यहाँ से आप बिल एडिट, डिलीट या ग्राहक को दोबारा WhatsApp पर बिल भेज सकते हैं।</p>
-                <div style="overflow-x:auto;">
+                <h3>📄 सेलिंग रिपोर्ट</h3>
+                <p style="color:#666; font-size:13px; margin-top:0;">यहाँ से बिल एडिट या डिलीट करें।</p>
+                <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th>तारीख & समय</th>
+                                <th>तारीख/समय</th>
                                 <th>ग्राहक</th>
                                 <th>रकम (₹)</th>
                                 <th>एक्शन</th>
@@ -299,20 +318,20 @@
             </div>
         </div>
 
-        <!-- TAB: शॉर्टेड स्टॉक (Sorted Stock) -->
+        <!-- TAB: शॉर्टेड स्टॉक -->
         <div id="shortStockTab" class="tab-section">
             <div class="card">
-                <h3>⚠️ शॉर्टेड स्टॉक (<25kg / 20 क्वांटिटी से नीचे)</h3>
-                <p style="color:#666; font-size:14px;">जो सामान 25 किलोग्राम या 20 क्वांटिटी से कम हो चुका है, उसकी सूची नीचे दी गई है:</p>
-                <div style="overflow-x:auto;">
+                <h3>⚠️ शॉर्टेड स्टॉक (<25kg / 20Qty)</h3>
+                <p style="color:#666; font-size:13px;">कम स्टॉक वाले सामान की सूची:</p>
+                <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th>यूनिक कोड</th>
-                                <th>सामान का नाम</th>
+                                <th>कोड</th>
+                                <th>नाम</th>
                                 <th>कैटेगरी</th>
-                                <th>मौजूदा स्टॉक मात्रा</th>
-                                <th>बिक्री रेट</th>
+                                <th>स्टॉक</th>
+                                <th>रेट</th>
                             </tr>
                         </thead>
                         <tbody id="shortStockTableBody"></tbody>
@@ -324,13 +343,13 @@
         <!-- TAB: बल्क अपलोड -->
         <div id="bulkUploadTab" class="tab-section">
             <div class="card">
-                <h3>📂 एक साथ एक्सेल (CSV) से प्रोडक्ट्स डंप करें</h3>
-                <p style="font-size:13px; color:#555;">CSV फॉर्मेट (Column Krama): Barcode, Name, PurchasePrice, SellingPrice, Qty, Unit(Kg/Packet/Piece), Category</p>
+                <h3>📂 एक्सेल (CSV) से प्रोडक्ट्स डंप करें</h3>
+                <p style="font-size:12px; color:#555;">फॉरमैट: Barcode, Name, PurchasePrice, SellingPrice, Qty, Unit, Category</p>
                 <div class="upload-box" onclick="document.getElementById('csvFileInput').click()">
-                    <p style="font-size: 18px; font-weight: bold; color: var(--primary);">📁 यहाँ क्लिक करके CSV फाइल चुनें</p>
+                    <p style="font-size: 16px; font-weight: bold; color: var(--primary);">📁 यहाँ क्लिक करके CSV फाइल चुनें</p>
                     <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleExcelUpload(event)">
                 </div>
-                <p id="uploadStatus" style="text-align: center; font-weight: bold; margin-top: 15px; color: var(--success);"></p>
+                <p id="uploadStatus" style="text-align: center; font-weight: bold; margin-top: 12px; color: var(--success); font-size: 14px;"></p>
             </div>
         </div>
 
@@ -338,20 +357,18 @@
         <div id="stockTab" class="tab-section">
             <div class="card">
                 <h3>📦 नया माल आया है (Stock Inward)</h3>
-                
-                <!-- नया माल जोड़ने वाले् ऑप्शन में बारकोड स्कैनर सुविधा -->
-                <label><b>बारकोड स्कैन करें या प्रोडक्ट चुनें:</b></label>
-                <div class="flex-row" style="align-items: center; margin-bottom: 10px;">
-                    <input type="text" id="stockScanInput" placeholder="🔍 बारकोड स्कैन करें..." oninput="searchStockItemByBarcode()" style="margin:0; flex:2;">
-                    <button class="btn btn-secondary" style="padding: 12px 15px; margin: 0; flex:1;" onclick="startCameraScanner('stockScanInput')">📷 स्कैन</button>
+                <label style="font-size: 13px;"><b>बारकोड स्कैन करें या प्रोडक्ट चुनें:</b></label>
+                <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 8px;">
+                    <input type="text" id="stockScanInput" placeholder="🔍 बारकोड स्कैन..." oninput="searchStockItemByBarcode()" style="margin:0; flex:1;">
+                    <button class="btn btn-secondary" style="padding: 12px; margin: 0; width: auto;" onclick="startCameraScanner('stockScanInput')">📷 स्कैन</button>
                 </div>
 
                 <select id="stockInSelect" onchange="loadExistingStockInfo()">
                     <option value="">-- प्रोडक्ट चुनें --</option>
                 </select>
-                <p>मौजूदा स्टॉक मात्रा: <strong id="currentStockDisplay" style="color: var(--primary); font-size: 20px;">0</strong> <span id="currentStockUnitDisplay"></span></p>
-                <input type="number" id="incomingQty" placeholder="नया कितना माल आया? (Qty)" step="0.001">
-                <button class="btn btn-primary" style="width:100%; padding: 14px;" onclick="updateStockInward()">स्टॉक में जोड़ें</button>
+                <p style="font-size: 14px;">मौजूदा स्टॉक: <strong id="currentStockDisplay" style="color: var(--primary); font-size: 18px;">0</strong> <span id="currentStockUnitDisplay"></span></p>
+                <input type="number" id="incomingQty" placeholder="नया माल कितना आया? (Qty)" step="0.001">
+                <button class="btn btn-primary" style="width:100%;" onclick="updateStockInward()">स्टॉक में जोड़ें</button>
             </div>
         </div>
 
@@ -359,41 +376,41 @@
         <div id="masterTab" class="tab-section">
             <div class="card">
                 <h3>➕ नया प्रोडक्ट जोड़ें (सिंगल)</h3>
-                <label><b>कैटेगरी चुनें:</b></label>
+                <label style="font-size: 13px;"><b>कैटेगरी:</b></label>
                 <select id="masterCategorySelect"></select>
                 
-                <label><b>यूनिक कोड / बारकोड:</b></label>
-                <div class="flex-row" style="align-items: center;">
-                    <input type="text" id="masterBarcode" placeholder="जैसे: CH1 या बारकोड स्कैन करें" style="flex:2; margin:8px 0;">
-                    <button class="btn btn-secondary" style="flex:1; padding: 14px;" onclick="startCameraScanner('masterBarcode')">📷 स्कैन</button>
+                <label style="font-size: 13px;"><b>यूनिक कोड / बारकोड:</b></label>
+                <div style="display: flex; gap: 6px; align-items: center;">
+                    <input type="text" id="masterBarcode" placeholder="जैसे: CH1" style="flex:1; margin:6px 0;">
+                    <button class="btn btn-secondary" style="padding: 12px; width: auto;" onclick="startCameraScanner('masterBarcode')">📷 स्कैन</button>
                 </div>
                 
                 <input type="text" id="masterName" placeholder="सामान का नाम (जैसे: चीनी)">
                 
-                <label><b>यूनिट चुनें (Kg, Packet, Piece):</b></label>
+                <label style="font-size: 13px;"><b>यूनिट:</b></label>
                 <select id="masterUnit">
                     <option value="Kg">Kg (किलोग्राम)</option>
                     <option value="Packet">Packet (पैकेट)</option>
                     <option value="Piece">Piece (पीस)</option>
                 </select>
 
-                <input type="number" id="masterPurchasePrice" placeholder="खरीद मूल्य प्रति यूनिट (Purchase Price ₹)" step="0.01">
-                <input type="number" id="masterPrice" placeholder="बिक्री मूल्य प्रति यूनिट (Selling Price ₹)" step="0.01">
+                <input type="number" id="masterPurchasePrice" placeholder="खरीद मूल्य प्रति यूनिट (₹)" step="0.01">
+                <input type="number" id="masterPrice" placeholder="बिक्री मूल्य प्रति यूनिट (₹)" step="0.01">
                 <input type="number" id="masterInitialQty" placeholder="शुरुआती स्टॉक मात्रा (Qty)" step="0.001">
-                <button class="btn btn-success" style="width:100%; margin-top:10px; padding: 14px;" onclick="saveMasterProduct()">परमानेन्ट प्रोडक्ट सेव करें</button>
+                <button class="btn btn-success" style="width:100%; margin-top:8px;" onclick="saveMasterProduct()">परमानेन्ट प्रोडक्ट सेव करें</button>
             </div>
         </div>
 
         <!-- TAB: स्टॉक लिस्ट & एडिट -->
         <div id="inventoryTab" class="tab-section">
             <div class="card">
-                <h3>📝 प्रोडक्ट स्टॉक & यूनिक कोड लिस्ट</h3>
-                <input type="text" id="inventorySearchInput" placeholder="🔍 खोजने के लिए यहाँ टाइप करें..." onkeyup="renderInventoryTable()">
-                <div style="overflow-x:auto;">
+                <h3>📝 प्रोडक्ट स्टॉक & एडिट</h3>
+                <input type="text" id="inventorySearchInput" placeholder="🔍 खोजने के लिए टाइप करें..." onkeyup="renderInventoryTable()">
+                <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th>यूनिक कोड / बारकोड</th>
+                                <th>कोड</th>
                                 <th>नाम</th>
                                 <th>कैटेगरी</th>
                                 <th>यूनिट</th>
@@ -419,52 +436,52 @@
         <div id="settingsTab" class="tab-section">
             <div class="card">
                 <h3>⚙️ दुकान और बिल सेटिंग्स</h3>
-                <label><b>दुकान का नाम:</b></label>
-                <input type="text" id="settingShopName" placeholder="जैसे: गुप्ता किराना स्टोर">
+                <label style="font-size: 13px;"><b>दुकान का नाम:</b></label>
+                <input type="text" id="settingShopName" placeholder="दुकान का नाम">
                 
-                <h4 style="margin-top:15px; color:var(--primary);">कैटेगरीज सेट करें:</h4>
+                <h4 style="margin-top:12px; color:var(--primary); font-size: 1rem;">कैटेगरीज सेट करें:</h4>
                 <input type="text" id="cat1" placeholder="कैटेगरी 1">
                 <input type="text" id="cat2" placeholder="कैटेगरी 2">
                 <input type="text" id="cat3" placeholder="कैटेगरी 3">
                 <input type="text" id="cat4" placeholder="कैटेगरी 4">
                 <input type="text" id="cat5" placeholder="कैटेगरी 5">
 
-                <h4 style="margin-top:15px; color:var(--primary);">WhatsApp बिल के नीचे का संदेश:</h4>
-                <input type="text" id="settingFooterText" placeholder="जैसे: 🙏 धन्यवाद!">
-                <button class="btn btn-primary" style="width:100%; margin-top:15px; padding:14px;" onclick="saveSettingsData()">सेटिंग्स सेव करें</button>
+                <h4 style="margin-top:12px; color:var(--primary); font-size: 1rem;">WhatsApp बिल का नीचे का संदेश:</h4>
+                <input type="text" id="settingFooterText" placeholder="जैसे: धन्यवाद!">
+                <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="saveSettingsData()">सेटिंग्स सेव करें</button>
             </div>
         </div>
 
         <!-- TAB: रिपोर्ट्स, लाभ और एक्सेल -->
         <div id="reportsTab" class="tab-section">
             <div class="card">
-                <h3>📊 रिपोर्ट्स, बिक्री & शुद्ध लाभ (Date Wise Profit)</h3>
-                <p style="font-size: 18px;">आज की कुल बिक्री: <strong style="color: var(--success); font-size: 22px;">₹<span id="dailySales">0</span></strong></p>
+                <h3>📊 रिपोर्ट्स & शुद्ध लाभ</h3>
+                <p style="font-size: 16px;">आज की कुल बिक्री: <strong style="color: var(--success); font-size: 18px;">₹<span id="dailySales">0</span></strong></p>
                 
-                <div style="background:#f3f4f6; padding:15px; border-radius:8px; margin:15px 0;">
-                    <h4 style="margin-top:0; color:var(--primary);">📅 तारीख के अनुसार सेल्स और प्रॉफिट (मुनाफा) कैलकुलेटर</h4>
+                <div style="background:#f3f4f6; padding:10px; border-radius:8px; margin:12px 0;">
+                    <h4 style="margin-top:0; color:var(--primary); font-size: 0.95rem;">📅 तारीख के अनुसार लाभ कैलकुलेटर</h4>
                     <div class="flex-row">
-                        <div style="flex:1;">
-                            <label><b>कब से (From Date):</b></label>
+                        <div>
+                            <label style="font-size: 12px;"><b>कब से:</b></label>
                             <input type="date" id="reportStartDate">
                         </div>
-                        <div style="flex:1;">
-                            <label><b>कब तक (To Date):</b></label>
+                        <div>
+                            <label style="font-size: 12px;"><b>कब तक:</b></label>
                             <input type="date" id="reportEndDate">
                         </div>
                     </div>
-                    <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="calculateDateWiseProfit()">📈 कुल बिक्री और शुद्ध लाभ (Profit) देखें</button>
+                    <button class="btn btn-primary" style="width:100%; margin-top:8px;" onclick="calculateDateWiseProfit()">📈 प्रॉफिट देखें</button>
                     
-                    <div id="profitReportResultBox" style="margin-top:15px; background:white; padding:12px; border-radius:8px; display:none; border:1px solid #d1d5db;">
-                        <p style="margin:5px 0;">कुल बिका हुआ सामान मूल्य: <b>₹<span id="repTotalSale">0</span></b></p>
-                        <p style="margin:5px 0;">कुल खरीद मूल्य (Cost): <b>₹<span id="repTotalCost">0</span></b></p>
-                        <p style="margin:5px 0; font-size:18px; color:var(--success);"><b>शुद्ध लाभ (Net Profit): ₹<span id="repTotalProfit">0</span></b></p>
+                    <div id="profitReportResultBox" style="margin-top:12px; background:white; padding:10px; border-radius:8px; display:none; border:1px solid #d1d5db; font-size: 14px;">
+                        <p style="margin:4px 0;">कुल बिक्री: <b>₹<span id="repTotalSale">0</span></b></p>
+                        <p style="margin:4px 0;">कुल खरीद लागत: <b>₹<span id="repTotalCost">0</span></b></p>
+                        <p style="margin:4px 0; font-size:16px; color:var(--success);"><b>शुद्ध लाभ: ₹<span id="repTotalProfit">0</span></b></p>
                     </div>
                 </div>
 
-                <div class="flex-row" style="margin-top: 20px;">
-                    <button class="btn btn-success" style="flex:1;" onclick="exportCustomDateSalesExcel()">📥 तारीख के अनुसार सेल्स एक्सेल डाउनलोड</button>
-                    <button class="btn btn-primary" style="flex:1;" onclick="exportStockExcel()">📥 स्टॉक इन्वेंट्री एक्सेल डाउनलोड</button>
+                <div class="flex-row" style="margin-top: 15px;">
+                    <button class="btn btn-success" style="font-size: 14px; padding: 10px;" onclick="exportCustomDateSalesExcel()">📥 सेल्स एक्सेल डाउनलोड</button>
+                    <button class="btn btn-primary" style="font-size: 14px; padding: 10px;" onclick="exportStockExcel()">📥 स्टॉक एक्सेल डाउनलोड</button>
                 </div>
             </div>
         </div>
@@ -583,7 +600,6 @@
 
     let productList = JSON.parse(localStorage.getItem('masterProductList')) || [];
 
-    // --- मात्रा बढ़ाने या घटाने के लिए नया फंक्शन (+ / - बटन के लिए) ---
     function adjustBillQty(amount) {
         let qtyInput = document.getElementById('billQty');
         let val = parseFloat(qtyInput.value);
@@ -596,7 +612,6 @@
         qtyInput.value = parseFloat(newVal.toFixed(3));
     }
 
-    // --- शॉर्टेड स्टॉक टेबल रेंडर करने का फंक्शन ---
     function renderShortStockTable() {
         productList = JSON.parse(localStorage.getItem('masterProductList')) || [];
         const tbody = document.getElementById('shortStockTableBody');
@@ -615,14 +630,13 @@
                     <td><b>${item.barcode || '---'}</b></td>
                     <td>${item.name}</td>
                     <td>${item.category}</td>
-                    <td style="color:var(--danger); font-weight:bold; font-size:16px;">${item.qty} ${item.unit || 'Kg'}</td>
+                    <td style="color:var(--danger); font-weight:bold;">${item.qty} ${item.unit || 'Kg'}</td>
                     <td>₹${item.price}</td>
                 </tr>
             `;
         });
     }
 
-    // --- कस्टमर डायरेक्टरी और ऑटो-सजेशन लॉजिक ---
     function getCustomerList() {
         return JSON.parse(localStorage.getItem('customerDirectory')) || [];
     }
@@ -688,7 +702,7 @@
             div.style.padding = "8px 12px";
             div.style.cursor = "pointer";
             div.style.borderBottom = "1px solid #eee";
-            div.innerHTML = `<b>${cust.name}</b> <span style="color:#666; font-size:13px;">(${cust.phone || 'नंबर नहीं'})</span>`;
+            div.innerHTML = `<b>${cust.name}</b> <span style="color:#666; font-size:12px;">(${cust.phone || 'नंबर नहीं'})</span>`;
             div.onmousedown = function() {
                 document.getElementById('custName').value = cust.name;
                 document.getElementById('custPhone').value = cust.phone;
@@ -722,7 +736,7 @@
         tbody.innerHTML = '';
 
         if(customers.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4">अभी कोई ग्राहक सेव नहीं है। बिलिंग करते समय नाम-नंबर सेव हो जाएगा।</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4">अभी कोई ग्राहक सेव नहीं है।</td></tr>`;
             return;
         }
 
@@ -734,9 +748,9 @@
                         <td>${cust.phone ? cust.phone : '<span style="color:red;">नंबर नहीं</span>'}</td>
                         <td><small>${cust.lastContact || '-'}</small></td>
                         <td>
-                            <div style="display:flex; gap:6px; justify-content:center;">
-                                ${cust.phone ? `<a href="tel:${cust.phone}" class="btn btn-primary" style="padding:6px 10px; font-size:13px; text-decoration:none;">📞 कॉल</a>` : ''}
-                                ${cust.phone ? `<a href="https://wa.me/${cust.phone}" target="_blank" class="btn btn-success" style="padding:6px 10px; font-size:13px; text-decoration:none;">💬 WhatsApp</a>` : ''}
+                            <div style="display:flex; gap:4px; justify-content:center;">
+                                ${cust.phone ? `<a href="tel:${cust.phone}" class="btn btn-primary" style="padding:4px 8px; font-size:12px; text-decoration:none;">📞</a>` : ''}
+                                ${cust.phone ? `<a href="https://wa.me/${cust.phone}" target="_blank" class="btn btn-success" style="padding:4px 8px; font-size:12px; text-decoration:none;">💬</a>` : ''}
                             </div>
                         </td>
                     </tr>
@@ -780,7 +794,7 @@
                 }
             }
             localStorage.setItem('masterProductList', JSON.stringify(productList));
-            document.getElementById('uploadStatus').innerText = `सफलतापूर्वक ${addedCount} प्रोडक्ट्स डंप हो गए!`;
+            document.getElementById('uploadStatus').innerText = `سफलतापूर्वक ${addedCount} प्रोडक्ट्स डंप हो गए!`;
             refreshAllDropdowns();
         };
         reader.readAsText(file);
@@ -827,7 +841,7 @@
         const stockSelect = document.getElementById('stockInSelect');
         stockSelect.innerHTML = '<option value="">-- प्रोडक्ट चुनें --</option>';
         productList.forEach((item, index) => {
-            stockSelect.innerHTML += `<option value="${index}">[कोड: ${item.barcode || '---'}] ${item.name} (स्टॉक: ${item.qty} ${item.unit || 'Kg'})</option>`;
+            stockSelect.innerHTML += `<option value="${index}">[${item.barcode || '---'}] ${item.name} (${item.qty} ${item.unit || 'Kg'})</option>`;
         });
         filterProductsByCategory();
     }
@@ -846,7 +860,7 @@
             let matchesCat = (selectedCat === "ALL" || item.category === selectedCat);
             let matchesSearch = item.name.toLowerCase().includes(searchQuery) || (item.barcode && item.barcode.toLowerCase().includes(searchQuery));
             if(matchesCat && matchesSearch) {
-                billSelect.innerHTML += `<option value="${index}">[कोड: ${item.barcode || '-'}] ${item.name} (स्टॉक: ${item.qty} ${item.unit || 'Kg'} | ₹${item.price})</option>`;
+                billSelect.innerHTML += `<option value="${index}">[${item.barcode || '-'}] ${item.name} (स्टॉक: ${item.qty} | ₹${item.price})</option>`;
             }
         });
         if(foundExactMatchIndex !== null) {
@@ -921,7 +935,7 @@
         }
         let product = productList[index];
         if(product.qty < qty) {
-            alert("चेतावनी: स्टॉक में पर्याप्त सामान नहीं है! उपलब्ध स्टॉक: " + product.qty + " " + (product.unit || 'Kg'));
+            alert("चेतावनी: स्टॉक में पर्याप्त सामान नहीं है! उपलब्ध: " + product.qty);
             return;
         }
         product.qty -= qty; 
@@ -962,7 +976,7 @@
                     <td>${item.qty} ${item.unit || ''}</td>
                     <td>₹${item.price}</td>
                     <td>₹${item.total.toFixed(2)}</td>
-                    <td><button class="btn btn-danger" style="padding:4px 10px;" onclick="removeItem(${index})">X</button></td>
+                    <td><button class="btn btn-danger" style="padding:2px 6px; font-size:12px;" onclick="removeItem(${index})">X</button></td>
                 </tr>
             `;
         });
@@ -1023,7 +1037,7 @@
 
         if(isWhatsAppSend) {
             if(!phone) {
-                alert("WhatsApp भेजने के लिए नंबर दर्ज नहीं है, पर डेटा सॉफ्टवेयर में सुरक्षित सेव हो गया है!");
+                alert("नंबर दर्ज नहीं है, पर डेटा सॉफ्टवेयर में सेव हो गया है!");
             } else {
                 let message = `*--- ${shopSettings.shopName} ---*\nनमस्ते ${name},\nखरीदारी का विवरण:\n`;
                 currentBill.forEach(item => {
@@ -1061,14 +1075,14 @@
             let actualIndex = salesHistory.length - 1 - reversedIndex;
             tbody.innerHTML += `
                 <tr>
-                    <td>${bill.dateTime}</td>
+                    <td><small>${bill.dateTime}</small></td>
                     <td><b>${bill.customer || 'ग्राहक'}</b><br><small>${bill.phone || ''}</small></td>
                     <td style="color:var(--success); font-weight:bold;">₹${bill.total.toFixed(2)}</td>
                     <td>
-                        <div style="display:flex; gap:4px; justify-content:center; flex-wrap:wrap;">
-                            ${bill.phone ? `<a href="https://wa.me/${bill.phone}?text=${encodeURIComponent('नमस्ते ' + bill.customer + ', आपके पिछले बिल का विवरण: ₹' + bill.total.toFixed(2))}" target="_blank" class="btn btn-success" style="padding:4px 8px; font-size:12px; text-decoration:none;">📲 री-सेंड WhatsApp</a>` : ''}
-                            <button class="btn btn-warning" style="padding:4px 8px; font-size:12px;" onclick="editBill(${actualIndex})">✏️ एडिट</button>
-                            <button class="btn btn-danger" style="padding:4px 8px; font-size:12px;" onclick="deleteBill(${actualIndex})">🗑️</button>
+                        <div style="display:flex; gap:4px; justify-content:center;">
+                            ${bill.phone ? `<a href="https://wa.me/${bill.phone}?text=${encodeURIComponent('नमस्ते ' + bill.customer + ', पिछले बिल का विवरण: ₹' + bill.total.toFixed(2))}" target="_blank" class="btn btn-success" style="padding:4px 6px; font-size:11px; text-decoration:none;">📲</a>` : ''}
+                            <button class="btn btn-warning" style="padding:4px 6px; font-size:11px;" onclick="editBill(${actualIndex})">✏️</button>
+                            <button class="btn btn-danger" style="padding:4px 6px; font-size:11px;" onclick="deleteBill(${actualIndex})">🗑️</button>
                         </div>
                     </td>
                 </tr>
@@ -1077,7 +1091,7 @@
     }
 
     function deleteBill(index) {
-        if(!confirm("क्या आप वाकई इस बिल को डिलीट करना चाहते हैं? स्टॉक वापस जुड़ जाएगा।")) return;
+        if(!confirm("क्या आप वाकई इस बिल को डिलीट करना चाहते हैं?")) return;
         let salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
         let bill = salesHistory[index];
         
@@ -1105,7 +1119,7 @@
     }
 
     function editBill(index) {
-        if(!confirm("इस बिल को एडिट करने के लिए 'बिलिंग काउंटर' पर खोला जाएगा। पिछला बिल डिलीट हो जाएगा।")) return;
+        if(!confirm("इस बिल को एडिट करने के लिए 'बिलिंग काउंटर' पर खोला जाएगा।")) return;
         let salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
         let bill = salesHistory[index];
         
@@ -1146,7 +1160,7 @@
         let endDate = document.getElementById('reportEndDate').value;
 
         if(!startDate || !endDate) {
-            alert("कृपया शुरू और आखिरी तारीख दोनों चुनें!");
+            alert("कृपया तारीख चुनें!");
             return;
         }
 
@@ -1179,20 +1193,20 @@
             if(item.name.toLowerCase().includes(query) || (item.barcode && item.barcode.toLowerCase().includes(query))) {
                 tbody.innerHTML += `
                     <tr>
-                        <td><input type="text" id="inv_bc_${index}" value="${item.barcode || ''}" style="margin:0; padding:6px;"></td>
-                        <td><input type="text" id="inv_name_${index}" value="${item.name}" style="margin:0; padding:6px;"></td>
-                        <td>${item.category}</td>
+                        <td><input type="text" id="inv_bc_${index}" value="${item.barcode || ''}" style="margin:0; padding:4px; font-size:13px;"></td>
+                        <td><input type="text" id="inv_name_${index}" value="${item.name}" style="margin:0; padding:4px; font-size:13px;"></td>
+                        <td><small>${item.category}</small></td>
                         <td>
-                            <select id="inv_unit_${index}" style="margin:0; padding:6px;">
+                            <select id="inv_unit_${index}" style="margin:0; padding:4px; font-size:13px;">
                                 <option value="Kg" ${item.unit === 'Kg' ? 'selected' : ''}>Kg</option>
                                 <option value="Packet" ${item.unit === 'Packet' ? 'selected' : ''}>Packet</option>
                                 <option value="Piece" ${item.unit === 'Piece' ? 'selected' : ''}>Piece</option>
                             </select>
                         </td>
-                        <td><input type="number" id="inv_pp_${index}" value="${item.purchasePrice || 0}" style="margin:0; padding:6px;" step="0.01"></td>
-                        <td><input type="number" id="inv_sp_${index}" value="${item.price}" style="margin:0; padding:6px;" step="0.01"></td>
-                        <td><input type="number" id="inv_qty_${index}" value="${item.qty}" style="margin:0; padding:6px;" step="0.001"></td>
-                        <td><button class="btn btn-success" style="padding:6px 12px;" onclick="saveEditedProduct(${index})">सेव</button></td>
+                        <td><input type="number" id="inv_pp_${index}" value="${item.purchasePrice || 0}" style="margin:0; padding:4px; font-size:13px;" step="0.01"></td>
+                        <td><input type="number" id="inv_sp_${index}" value="${item.price}" style="margin:0; padding:4px; font-size:13px;" step="0.01"></td>
+                        <td><input type="number" id="inv_qty_${index}" value="${item.qty}" style="margin:0; padding:4px; font-size:13px;" step="0.001"></td>
+                        <td><button class="btn btn-success" style="padding:4px 8px; font-size:12px;" onclick="saveEditedProduct(${index})">सेव</button></td>
                     </tr>
                 `;
             }
@@ -1220,7 +1234,7 @@
         container.style.display = 'block';
         if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
 
-        html5QrCode.start({ facingMode: "environment" }, { fps: 15, qrbox: { width: 280, height: 180 } },
+        html5QrCode.start({ facingMode: "environment" }, { fps: 15, qrbox: { width: 220, height: 140 } },
             (decodedText) => {
                 document.getElementById(activeTargetInputId).value = decodedText;
                 if(activeTargetInputId === 'productSearchInput') searchProductsList();
