@@ -404,7 +404,10 @@
         <!-- TAB: स्टॉक लिस्ट & एडिट -->
         <div id="inventoryTab" class="tab-section">
             <div class="card">
-                <h3>📝 प्रोडक्ट स्टॉक & एडिट</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+                    <h3 style="margin: 0;">📝 प्रोडक्ट स्टॉक & एडिट</h3>
+                    <button class="btn btn-danger" style="padding: 8px 12px; font-size: 14px;" onclick="clearEntireAppInventory()">🗑️ सब कुछ डिलीट करें (ऐप खाली करें)</button>
+                </div>
                 <input type="text" id="inventorySearchInput" placeholder="🔍 खोजने के लिए टाइप करें..." onkeyup="renderInventoryTable()">
                 <div class="table-responsive">
                     <table>
@@ -794,7 +797,7 @@
                 }
             }
             localStorage.setItem('masterProductList', JSON.stringify(productList));
-            document.getElementById('uploadStatus').innerText = `سफलतापूर्वक ${addedCount} प्रोडक्ट्स डंप हो गए!`;
+            document.getElementById('uploadStatus').innerText = `सफलतापूर्वक ${addedCount} प्रोडक्ट्स डंप हो गए!`;
             refreshAllDropdowns();
         };
         reader.readAsText(file);
@@ -1206,7 +1209,12 @@
                         <td><input type="number" id="inv_pp_${index}" value="${item.purchasePrice || 0}" style="margin:0; padding:4px; font-size:13px;" step="0.01"></td>
                         <td><input type="number" id="inv_sp_${index}" value="${item.price}" style="margin:0; padding:4px; font-size:13px;" step="0.01"></td>
                         <td><input type="number" id="inv_qty_${index}" value="${item.qty}" style="margin:0; padding:4px; font-size:13px;" step="0.001"></td>
-                        <td><button class="btn btn-success" style="padding:4px 8px; font-size:12px;" onclick="saveEditedProduct(${index})">सेव</button></td>
+                        <td>
+                            <div style="display:flex; gap:4px; justify-content:center;">
+                                <button class="btn btn-success" style="padding:4px 6px; font-size:11px;" onclick="saveEditedProduct(${index})">सेव</button>
+                                <button class="btn btn-danger" style="padding:4px 6px; font-size:11px;" onclick="deleteSingleProduct(${index})">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                 `;
             }
@@ -1223,6 +1231,36 @@
         localStorage.setItem('masterProductList', JSON.stringify(productList));
         refreshAllDropdowns();
         alert("प्रोडक्ट अपडेट कर दिया गया!");
+    }
+
+    function deleteSingleProduct(index) {
+        let productName = productList[index].name;
+        if(!confirm(`क्या आप वाकई प्रोडक्ट "${productName}" को डिलीट करना चाहते हैं?`)) return;
+        
+        productList.splice(index, 1);
+        localStorage.setItem('masterProductList', JSON.stringify(productList));
+        renderInventoryTable();
+        refreshAllDropdowns();
+        alert("प्रोडक्ट सफलतापूर्वक डिलीट कर दिया गया है।");
+    }
+
+    function clearEntireAppInventory() {
+        let ask1 = confirm("⚠️ चेतावनी: क्या आप वाकई पूरा स्टॉक और ऐप का सारा डेटा डिलीट करना चाहते हैं? इससे सारा प्रोडक्ट डेटा खाली हो जाएगा!");
+        if(!ask1) return;
+
+        let ask2 = confirm("पक्का ना? इसके बाद आप नया Excel डंप कर पाएंगे। सभी प्रोडक्ट्स हट जाएंगे।");
+        if(!ask2) return;
+
+        // Clear local storage items related to products
+        localStorage.removeItem('masterProductList');
+        productList = [];
+        
+        // Refresh UI
+        renderInventoryTable();
+        refreshAllDropdowns();
+        
+        alert("पूरा ऐप खाली कर दिया गया है! अब आप नया Excel फाइल डंप कर सकते हैं।");
+        switchTab('bulkUploadTab');
     }
 
     let html5QrCode = null;
@@ -1254,7 +1292,7 @@
 
     function exportCustomDateSalesExcel() {
         let salesHistory = JSON.parse(localStorage.getItem('salesHistory')) || [];
-        let startDate = document.getElementById('reportStartDate').value;
+        let startDate = document.getElementById('reportStartDate.value') || document.getElementById('reportStartDate').value;
         let endDate = document.getElementById('reportEndDate').value;
         let filtered = salesHistory.filter(row => row.date >= startDate && row.date <= endDate);
         if(filtered.length === 0) { alert("डेटा उपलब्ध नहीं है!"); return; }
