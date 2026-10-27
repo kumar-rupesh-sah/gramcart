@@ -137,6 +137,36 @@
             font-weight: bold;
         }
 
+        /* PAID & DUES BOX STYLING */
+        .payment-status-box {
+            background: #fffbebf3;
+            border: 2px dashed #f59e0b;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .payment-option-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .payment-option-card:hover {
+            border-color: var(--primary);
+        }
+        .payment-option-card input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            cursor: pointer;
+        }
+
         /* PRINT STYLING FIX */
         @media print {
             body * { visibility: hidden !important; }
@@ -245,6 +275,7 @@
                         <button onclick="switchTab('sellingReportTab')" style="color: var(--primary);">📄 सेलिंग रिपोर्ट</button>
                         <button onclick="switchTab('settingsTab')">⚙️ सेटिंग्स & बैकअप</button>
                         <button onclick="switchTab('reportsTab')">📊 रिपोर्ट्स & लाभ</button>
+                        <button onclick="exportAllModulesToExcelFiles()" style="color: var(--success); font-weight: bold;">📂 मोबाइल फ़ोल्डर-वार Excel बैकअप</button>
                         <button onclick="toggleMenu()" style="color: var(--danger); background: #fee2e2; font-weight: bold; text-align: center;">✕ मेनू बंद करें</button>
                     </div>
                 </div>
@@ -359,6 +390,29 @@
                     <div id="discountRow" class="hidden" style="margin-bottom: 4px; color: var(--danger);">छूट (Discount): -₹<span id="discountAmountDisplay">0</span></div>
                     <h3 style="margin: 0; color: var(--success);">कुल योग: ₹<span id="grandTotal">0</span></h3>
                 </div>
+
+                <!-- CASH COUNTER: PAID / DUES BOX ADDITION -->
+                <div class="payment-status-box">
+                    <label style="font-size: 15px; font-weight: bold; color: #b45309; display: block; margin-bottom: 8px;">
+                        💳 भुगतान की स्थिति चुनें (अनिवार्य / Mandatory):
+                    </label>
+                    <div class="flex-row">
+                        <label class="payment-option-card">
+                            <input type="radio" name="paymentStatusRadio" value="PAID">
+                            <div>
+                                <strong style="color: var(--success); font-size: 15px;">✅ पूरा भुगतान प्राप्त हुआ (Full Paid)</strong>
+                                <div style="font-size: 12px; color: #6b7280;">गहक द्वारा सारा पैसा नकद / ऑनलाइन जमा कर दिया गया है।</div>
+                            </div>
+                        </label>
+                        <label class="payment-option-card">
+                            <input type="radio" name="paymentStatusRadio" value="DUES">
+                            <div>
+                                <strong style="color: var(--danger); font-size: 15px;">⏳ बकाया राशि दर्ज करें (Dues / Udhaar)</strong>
+                                <div style="font-size: 12px; color: #6b7280;">ग्राहक पर बकाया राशि रखी गई है (खाते में दर्ज होगी)।</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
                 
                 <div style="margin-top: 15px;">
                     <label style="font-size: 14px; font-weight: bold; color: var(--primary);">📝 बिल संदेश / कस्टमाइज़ेशन:</label>
@@ -384,6 +438,7 @@
                     <div><b>दिनांक:</b> <span id="receiptDate"></span></div>
                     <div><b>ग्राहक:</b> <span id="receiptCustName"></span></div>
                     <div><b>मोबाइल:</b> <span id="receiptCustPhone"></span></div>
+                    <div><b>भुगतान स्थिति:</b> <span id="receiptPaymentStatus" style="font-weight:bold;"></span></div>
                 </div>
                 <hr style="border: 1px dashed #000; margin: 6px 0;">
                 <table style="width: 100%; font-size: 11px; border-collapse: collapse;">
@@ -462,6 +517,7 @@
                                 <th>दिनांक/समय</th>
                                 <th>ग्राहक का नाम</th>
                                 <th>मोबाइल नंबर</th>
+                                <th>भुगतान स्थिति</th>
                                 <th>खरीदे गए सामान विवरण</th>
                                 <th>डिस्काउंट (Discount)</th>
                                 <th>कुल राशि (₹)</th>
@@ -536,7 +592,7 @@
                 </div>
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>दिनांक/समय</th><th>ग्राहक</th><th>मोबाइल</th><th>कुल राशि (₹)</th><th>एक्शन</th></tr></thead>
+                        <thead><tr><th>दिनांक/समय</th><th>ग्राहक</th><th>मोबाइल</th><th>भुगतान स्थिति</th><th>कुल राशि (₹)</th><th>एक्शन</th></tr></thead>
                         <tbody id="salesReportTableBody"></tbody>
                     </table>
                 </div>
@@ -679,6 +735,11 @@
                 <textarea id="settingDefaultBillNote" rows="3" placeholder="धन्यवाद! पधारें दोबारा..."></textarea>
 
                 <button class="btn btn-primary" style="margin-top: 10px;" onclick="saveSettingsData()">सेटिंग्स सेव करें</button>
+
+                <hr style="margin: 20px 0;">
+                <h4>📂 मोबाइल फ़ोल्डर-वार Excel डेटा डाउनलोड (Multi-Folder Backup)</h4>
+                <p style="font-size: 13px; color: #6b7280;">लाभ (Profit), ग्राहक डायरेक्टरी (Customer Directory), सेलिंग रिपोर्ट और इन्वेंटरी का अलग-अलग Excel CSV फ़ाइलों में बैकअप सुरक्षित करें:</p>
+                <button class="btn btn-success" onclick="exportAllModulesToExcelFiles()">📥 सभी रिपोर्ट्स को पृथक Excel फ़ाइलों में सेव करें</button>
 
                 <hr style="margin: 20px 0;">
                 <h4>🗂️ कैटेगरीज मैनेजमेंट (देखें, जोड़ें व डिलीट करें)</h4>
@@ -1162,6 +1223,16 @@
         renderBillTable();
     }
 
+    function getSelectedPaymentStatus() {
+        const radios = document.getElementsByName('paymentStatusRadio');
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                return radios[i].value; // 'PAID' or 'DUES'
+            }
+        }
+        return null;
+    }
+
     function refreshBillingCounter() {
         currentBillItems = [];
         editingSaleIndex = null;
@@ -1173,12 +1244,23 @@
         document.getElementById('billQty').value = 1;
         document.getElementById('billDiscountInput').value = 0;
         if(document.getElementById('billGstPercent')) document.getElementById('billGstPercent').value = 0;
+        
+        const radios = document.getElementsByName('paymentStatusRadio');
+        for (let i = 0; i < radios.length; i++) radios[i].checked = false;
+
         renderBillTable();
     }
 
     function saveAndProcessBill(actionType) {
         if(currentBillItems.length === 0) {
             alert("बिल में कोई सामान नहीं है!");
+            return;
+        }
+
+        // STRICT CHECK FOR PAID OR DUES SELECTION
+        const paymentStatus = getSelectedPaymentStatus();
+        if(!paymentStatus) {
+            alert("⚠️ कृपया बिल प्रोसेस करने से पहले भुगतान की स्थिति (✅ Paid या ⏳ Dues) में से किसी एक पर टिक (Click) ज़रूर करें!");
             return;
         }
 
@@ -1214,6 +1296,7 @@
             rawDate: new Date().toISOString().split('T')[0],
             custName: custName,
             custPhone: custPhone,
+            paymentStatus: paymentStatus, // 'PAID' or 'DUES'
             items: [...currentBillItems],
             subTotal: subTotal,
             totalGst: totalGst,
@@ -1236,12 +1319,15 @@
             }
         }
 
+        let statusTextHindi = paymentStatus === 'PAID' ? '✅ चुकता (PAID)' : '⏳ बकाया राशि (DUES)';
+
         if(actionType === 'print') {
             document.getElementById('receiptShopName').innerText = shopSettings.shopName;
             document.getElementById('receiptShopMobile').innerText = "मोबाइल: " + (shopSettings.shopMobile || "N/A");
             document.getElementById('receiptDate').innerText = saleRecord.date;
             document.getElementById('receiptCustName').innerText = custName;
             document.getElementById('receiptCustPhone').innerText = custPhone;
+            document.getElementById('receiptPaymentStatus').innerText = statusTextHindi;
             document.getElementById('receiptGrandTotal').innerText = grandTotal.toFixed(2);
             document.getElementById('receiptCustomNote').innerText = billNote;
 
@@ -1305,6 +1391,7 @@
             let msg = `🛍️ *${shopSettings.shopName}* (Mob: ${shopSettings.shopMobile || 'N/A'})\n`;
             msg += `📅 दिनांक: ${saleRecord.date}\n`;
             msg += `👤 ग्राहक: ${custName}\n`;
+            msg += `💳 भुगतान स्थिति: *${statusTextHindi}*\n`;
             msg += `------------------------------------\n`;
             msg += `क्र. | आइटम नाम        | मात्रा   | रेट   | कुल (₹)\n`;
             msg += `------------------------------------\n`;
@@ -1343,7 +1430,7 @@
             }
         }
 
-        alert("बिल सफलतापूर्वक सहेज लिया गया!");
+        alert(`बिल सहेज लिया गया! भुगतान स्थिति: ${statusTextHindi}`);
         refreshBillingCounter();
         updateProductDropdowns();
     }
@@ -1405,7 +1492,7 @@
                 }
                 summaryMap[key].totalQty += parseFloat(item.qty) || 0;
                 let ib = (item.qty * item.price);
-                let ig = item.gstAmount || (shopSettings.gstEnabled ? (ib * (item.gstPercent || 0)) / 100 : 0);
+                let ig = item.gstAmount || (shopSettings.gstEnabled ? (item.gstPercent || 0) : 0);
                 summaryMap[key].totalPrice += (ib + ig);
             });
         });
@@ -1473,11 +1560,7 @@
         Object.values(summaryMap).forEach(item => {
             csv += `"${item.name}",${item.totalQty.toFixed(3)},"${item.unit}",${item.totalPrice.toFixed(2)}\n`;
         });
-        let blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Product_Quantity_Summary.csv";
-        link.click();
+        downloadCsvFile(csv, "Product_Quantity_Summary.csv");
     }
 
     function renderCategoryManager() {
@@ -1766,6 +1849,10 @@
                 let isDeletedFromSales = !activeSaleIds.has(sale.id);
                 let rowStyle = isDeletedFromSales ? "background-color: #fee2e2; color: #b91c1c;" : "";
 
+                let pStatusTag = (sale.paymentStatus === 'PAID') 
+                    ? `<span style="color:var(--success); font-weight:bold;">✅ चुकता</span>` 
+                    : `<span style="color:var(--danger); font-weight:bold;">⏳ बकाया</span>`;
+
                 let discountDisplay = (sale.discount && sale.discount > 0) ? `<span style="color:var(--danger); font-weight:bold;">-₹${sale.discount.toFixed(2)}</span>` : `<span style="color:#9ca3af;">-</span>`;
 
                 tbody.innerHTML += `
@@ -1773,6 +1860,7 @@
                         <td>${sale.date}</td>
                         <td style="font-weight:bold;">${sale.custName}</td>
                         <td>${sale.custPhone}</td>
+                        <td>${pStatusTag}</td>
                         <td style="text-align:left; font-size:13px;">${itemsDesc} ${isDeletedFromSales ? '<br><small><b>(सेलिंग रिपोर्ट से हटाया गया)</b></small>' : ''}</td>
                         <td>${discountDisplay}</td>
                         <td><b>₹${sale.total.toFixed(2)}</b></td>
@@ -1813,6 +1901,13 @@
         document.getElementById('custPhone').value = sale.custPhone;
         document.getElementById('billDiscountInput').value = sale.discount || 0;
         document.getElementById('customBillNoteText').value = sale.note || shopSettings.defaultBillNote;
+        
+        // Restore payment radio status
+        const radios = document.getElementsByName('paymentStatusRadio');
+        for (let i = 0; i < radios.length; i++) {
+            radios[i].checked = (radios[i].value === sale.paymentStatus);
+        }
+
         switchTab('billingTab');
         renderBillTable();
         alert("यह पुराना बिल काउंटर में लोड कर दिया गया है। बदलाव करके दोबारा 'सेव' कर सकते हैं।");
@@ -1820,9 +1915,11 @@
 
     function reWhatsAppBillHistory(index) {
         let sale = customerPurchaseHistory[index];
+        let statusTextHindi = sale.paymentStatus === 'PAID' ? '✅ चुकता (PAID)' : '⏳ बकाया राशि (DUES)';
         let msg = `🛍️ *${shopSettings.shopName}* (Mob: ${shopSettings.shopMobile || 'N/A'})\n`;
         msg += `📅 दिनांक: ${sale.date}\n`;
         msg += `👤 ग्राहक: ${sale.custName}\n`;
+        msg += `💳 भुगतान स्थिति: *${statusTextHindi}*\n`;
         msg += `------------------------------------\n`;
         msg += `क्र. | आइटम नाम        | मात्रा   | रेट   | कुल (₹)\n`;
         msg += `------------------------------------\n`;
@@ -1858,9 +1955,11 @@
 
     function reMessageBillHistory(index) {
         let sale = customerPurchaseHistory[index];
+        let statusTextHindi = sale.paymentStatus === 'PAID' ? '✅ चुकता (PAID)' : '⏳ बकाया राशि (DUES)';
         let msg = `🛍️ ${shopSettings.shopName} (Mob: ${shopSettings.shopMobile || 'N/A'})\n`;
         msg += `📅 दिनांक: ${sale.date}\n`;
         msg += `👤 ग्राहक: ${sale.custName}\n`;
+        msg += `💳 भुगतान स्थिति: ${statusTextHindi}\n`;
         msg += `------------------------------------\n`;
         msg += `क्र. | आइटम नाम        | मात्रा   | रेट   | कुल (₹)\n`;
         msg += `------------------------------------\n`;
@@ -1900,11 +1999,16 @@
         let filteredSales = filterByDate(salesHistory, 'reportStartDate', 'reportEndDate');
         filteredSales.forEach((sale, index) => {
             let actualIndex = salesHistory.indexOf(sale);
+            let pStatusTag = (sale.paymentStatus === 'PAID') 
+                ? `<span style="color:var(--success); font-weight:bold;">✅ PAID</span>` 
+                : `<span style="color:var(--danger); font-weight:bold;">⏳ DUES</span>`;
+
             tbody.innerHTML += `
                 <tr>
                     <td>${sale.date}</td>
                     <td>${sale.custName}</td>
                     <td>${sale.custPhone}</td>
+                    <td>${pStatusTag}</td>
                     <td><b>₹${sale.total.toFixed(2)}</b></td>
                     <td><button class="btn btn-danger" style="padding:6px 10px; font-size:12px;" onclick="deleteSaleRecord(${actualIndex})">🗑️ डिलीट</button></td>
                 </tr>
@@ -2101,45 +2205,93 @@
         alert("सेटिंग्स सफलतापूर्वक सहेज ली गईं!");
     }
 
+    // HELPER FUNCTION FOR CSV EXPORTS
+    function downloadCsvFile(csvContent, fileName) {
+        let blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+    }
+
+    // EXPORT ALL DATA MODULES INTO INDIVIDUAL FILES
+    function exportAllModulesToExcelFiles() {
+        // 1. Profit Labh Report File
+        let csvProfit = "ProductName,TotalQtySold,TotalSale,NetProfit\n";
+        const { profitMap } = getFilteredProfitData();
+        Object.keys(profitMap).forEach(key => {
+            let p = profitMap[key];
+            csvProfit += `"${p.name}",${p.qty},${p.sale},${p.profit}\n`;
+        });
+        downloadCsvFile(csvProfit, "01_Profit_Labh_Report.csv");
+
+        // 2. Customer Directory File
+        setTimeout(() => {
+            let csvCust = "CustomerName,MobileNumber\n";
+            customerMasterList.forEach(c => {
+                csvCust += `"${c.name}","${c.phone}"\n`;
+            });
+            downloadCsvFile(csvCust, "02_Customer_Directory.csv");
+        }, 300);
+
+        // 3. Selling Report File
+        setTimeout(() => {
+            let csvSelling = "DateTime,CustomerName,CustomerPhone,PaymentStatus,TotalAmount\n";
+            salesHistory.forEach(s => {
+                csvSelling += `"${s.date}","${s.custName}","${s.custPhone}","${s.paymentStatus || 'N/A'}",${s.total}\n`;
+            });
+            downloadCsvFile(csvSelling, "03_Selling_Report.csv");
+        }, 600);
+
+        // 4. Inventory Stock File
+        setTimeout(() => {
+            let csvStock = "Barcode,Name,PurchasePrice,SellingPrice,StockQty,Unit,Category\n";
+            productList.forEach(p => {
+                csvStock += `"${p.barcode || ''}","${p.name}",${p.cost || 0},${p.price || 0},${p.qty || 0},"${p.unit || 'Piece'}","${p.category || 'अन्य'}"\n`;
+            });
+            downloadCsvFile(csvStock, "04_Inventory_Stock.csv");
+        }, 900);
+
+        // 5. Customer Purchase History File
+        setTimeout(() => {
+            let csvHist = "DateTime,CustomerName,CustomerPhone,PaymentStatus,ItemsDetail,Discount,TotalAmount\n";
+            customerPurchaseHistory.forEach(s => {
+                let itemsDesc = s.items.map(i => `${i.name} (${i.qty} ${i.unit})`).join(' | ');
+                csvHist += `"${s.date}","${s.custName}","${s.custPhone}","${s.paymentStatus || 'N/A'}","${itemsDesc}",${s.discount || 0},${s.total}\n`;
+            });
+            downloadCsvFile(csvHist, "05_Customer_Purchase_History.csv");
+        }, 1200);
+
+        alert("सभी मॉड्यूल्स की पृथक Excel (CSV) फ़ाइलें आपके डाउनलोड्स फ़ोल्डर में सहेजी जा रही हैं!");
+    }
+
     function exportProductsToExcel() {
         let csv = "Barcode,Name,PurchasePrice,SellingPrice,StockQty,Unit,Category\n";
         let listToExport = getFilteredInventoryProducts();
         listToExport.forEach(p => {
             csv += `"${p.barcode || ''}","${p.name}",${p.cost || 0},${p.price || 0},${p.qty || 0},"${p.unit || 'Piece'}","${p.category || 'अन्य'}"\n`;
         });
-        let blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Inventory_Stock_List.csv";
-        link.click();
+        downloadCsvFile(csv, "Inventory_Stock_List.csv");
     }
 
     function exportSellingReportToExcel() {
-        let csv = "DateTime,CustomerName,CustomerPhone,TotalAmount\n";
+        let csv = "DateTime,CustomerName,CustomerPhone,PaymentStatus,TotalAmount\n";
         let filteredSales = filterByDate(salesHistory, 'reportStartDate', 'reportEndDate');
         filteredSales.forEach(s => {
-            csv += `"${s.date}","${s.custName}","${s.custPhone}",${s.total}\n`;
+            csv += `"${s.date}","${s.custName}","${s.custPhone}","${s.paymentStatus || 'N/A'}",${s.total}\n`;
         });
-        let blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Sales_Report_Filtered.csv";
-        link.click();
+        downloadCsvFile(csv, "Sales_Report_Filtered.csv");
     }
 
     function exportCustomerPurchaseHistoryToExcel() {
-        let csv = "DateTime,CustomerName,CustomerPhone,ItemsDetail,Discount,TotalAmount\n";
+        let csv = "DateTime,CustomerName,CustomerPhone,PaymentStatus,ItemsDetail,Discount,TotalAmount\n";
         let filteredHistory = filterByDate(customerPurchaseHistory, 'custHistoryStartDate', 'custHistoryEndDate');
         filteredHistory.forEach(s => {
             let itemsDesc = s.items.map(i => `${i.name} (${i.qty} ${i.unit})`).join(' | ');
             let disc = s.discount || 0;
-            csv += `"${s.date}","${s.custName}","${s.custPhone}","${itemsDesc}",${disc},${s.total}\n`;
+            csv += `"${s.date}","${s.custName}","${s.custPhone}","${s.paymentStatus || 'N/A'}","${itemsDesc}",${disc},${s.total}\n`;
         });
-        let blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Customer_Purchase_History.csv";
-        link.click();
+        downloadCsvFile(csv, "Customer_Purchase_History.csv");
     }
 
     function exportQuickRateToExcel() {
@@ -2148,11 +2300,7 @@
         listToExport.forEach(p => {
             csv += `"${p.barcode || ''}","${p.name}",${p.cost},${p.price}\n`;
         });
-        let blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Quick_Rate_List.csv";
-        link.click();
+        downloadCsvFile(csv, "Quick_Rate_List.csv");
     }
 
     function exportProfitReportToExcel() {
@@ -2162,11 +2310,7 @@
             let p = profitMap[key];
             csv += `"${p.name}",${p.qty},${p.sale},${p.profit}\n`;
         });
-        let blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;'});
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Profit_Report_Filtered.csv";
-        link.click();
+        downloadCsvFile(csv, "Profit_Report_Filtered.csv");
     }
 
     function exportDataJSON() {
