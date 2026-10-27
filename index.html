@@ -165,6 +165,23 @@
             max-width: 100%;
             overflow-x: auto;
         }
+        .pass-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .pass-wrapper input {
+            padding-right: 45px;
+        }
+        .toggle-eye {
+            position: absolute;
+            right: 12px;
+            top: 38%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -174,23 +191,28 @@
         <h2>🔐 दुकान सुरक्षा & लॉगिन / रजिस्टर</h2>
         <p style="text-align: center; color: #6b7280; font-size: 14px;">ड्राइवर आईडी, पासवर्ड और मोबाइल नंबर दर्ज करें</p>
         
-        <label><b>ड्राइवर आईडी (Driver ID):</b></label>
-        <input type="text" id="driverIdInput" placeholder="जैसे: abc">
-        
-        <label><b>पासवर्ड (Password):</b></label>
-        <input type="password" id="passInput" placeholder="पासवर्ड दर्ज करें">
+        <form id="loginForm" onsubmit="event.preventDefault(); verifyOnlineLogin();">
+            <label><b>ड्राइवर आईडी (Driver ID):</b></label>
+            <input type="text" id="driverIdInput" name="username" autocomplete="username" placeholder="जैसे: abc" required>
+            
+            <label><b>पासवर्ड (Password):</b></label>
+            <div class="pass-wrapper">
+                <input type="password" id="passInput" name="password" autocomplete="current-password" placeholder="पासवर्ड दर्ज करें" required>
+                <span class="toggle-eye" onclick="togglePasswordVisibility()">👁️</span>
+            </div>
 
-        <label><b>मोबाइल नंबर (Mobile Number):</b></label>
-        <input type="tel" id="mobileInput" placeholder="10 अंकों का मोबाइल नंबर">
-        
-        <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-            <button class="btn btn-primary" style="flex:1; min-width: 120px;" onclick="verifyOnlineLogin()">लॉगिन करें</button>
-            <button class="btn btn-success" style="flex:1; min-width: 120px;" onclick="registerNewDriver()">नया रजिस्ट्रेशन</button>
-        </div>
+            <label><b>मोबाइल नंबर (Mobile Number):</b></label>
+            <input type="tel" id="mobileInput" autocomplete="tel" placeholder="10 अंकों का मोबाइल नंबर">
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-primary" style="flex:1; min-width: 120px;" onclick="verifyOnlineLogin()">लॉगिन करें</button>
+                <button type="button" class="btn btn-success" style="flex:1; min-width: 120px;" onclick="registerNewDriver()">नया रजिस्ट्रेशन</button>
+            </div>
 
-        <div style="margin-top: 10px; text-align: right;">
-            <button type="button" style="background:none; border:none; color:var(--primary); text-decoration:underline; cursor:pointer; font-size:15px;" onclick="forgotPassword()">पासवर्ड भूल गए?</button>
-        </div>
+            <div style="margin-top: 10px; text-align: right;">
+                <button type="button" style="background:none; border:none; color:var(--primary); text-decoration:underline; cursor:pointer; font-size:15px;" onclick="forgotPassword()">पासवर्ड भूल गए?</button>
+            </div>
+        </form>
 
         <p id="loginStatusMsg" style="color: var(--danger); text-align: center; font-weight: bold; margin-top: 15px; font-size: 15px;"></p>
     </div>
@@ -412,7 +434,6 @@
             </div>
         </div>
 
-        <!-- 1. ग्राहक खरीद इतिहास (डेट फ़िल्टर और ऑल डिलीट के साथ) -->
         <div id="customerPurchaseHistoryTab" class="tab-section">
             <div class="card">
                 <h3>🛍️ ग्राहक खरीद इतिहास & बिल एडिट</h3>
@@ -453,7 +474,6 @@
             </div>
         </div>
 
-        <!-- 2. कुल उत्पाद मात्रा गणना -->
         <div id="productQtySumTab" class="tab-section">
             <div class="card">
                 <h3>📊 सभी उत्पादों की कुल मात्रा और मूल्य गणना</h3>
@@ -497,7 +517,6 @@
             </div>
         </div>
 
-        <!-- 3. सेलिंग रिपोर्ट -->
         <div id="sellingReportTab" class="tab-section">
             <div class="card">
                 <h3>📄 सेलिंग रिपोर्ट (बिक्री इतिहास & डिलीट ऑप्शन)</h3>
@@ -680,7 +699,6 @@
             </div>
         </div>
 
-        <!-- 4. रिपोर्ट्स लाभ -->
         <div id="reportsTab" class="tab-section">
             <div class="card">
                 <h3>📊 कुल लाभ (Profit) & रिपोर्ट्स</h3>
@@ -729,7 +747,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_ITh-JNIb5-jOXdlVtjiw3hSpvEU3VV5NXuNiHA3t77PyAGOZX6ODuK-hZh11w2uorA/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz57QC9k7U-uufCCkm-eg6NMhZy7J_gANVLKWXMLLWVkn13d4-ZADibY0q-WQuvrV9L2g/exec";
     let deviceId = localStorage.getItem('deviceId') || ('DEV_' + Math.random().toString(36).substr(2, 9));
     localStorage.setItem('deviceId', deviceId);
 
@@ -754,6 +772,15 @@
             document.getElementById('loginSection').classList.add('hidden');
             document.getElementById('appSection').classList.remove('hidden');
             initApp();
+        }
+    }
+
+    function togglePasswordVisibility() {
+        const pInput = document.getElementById('passInput');
+        if (pInput.type === "password") {
+            pInput.type = "text";
+        } else {
+            pInput.type = "password";
         }
     }
 
@@ -782,7 +809,39 @@
         }
     }
 
-    function verifyOnlineLogin() {
+    function makeJsonpRequest(url, callbackName, timeoutMs = 12000) {
+        return new Promise((resolve, reject) => {
+            let timer = setTimeout(() => {
+                cleanup();
+                reject(new Error("नेटवर्क टाइमआउट: सर्वर प्रतिक्रिया नहीं दे रहा है।"));
+            }, timeoutMs);
+
+            function cleanup() {
+                if (timer) clearTimeout(timer);
+                if (window[callbackName]) delete window[callbackName];
+                const script = document.getElementById(callbackName);
+                if (script && script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            }
+
+            window[callbackName] = function(data) {
+                cleanup();
+                resolve(data);
+            };
+
+            const script = document.createElement('script');
+            script.id = callbackName;
+            script.src = url;
+            script.onerror = function() {
+                cleanup();
+                reject(new Error("सर्वर से कनेक्शन विफल रहा (Netlify/CORS समस्या)।"));
+            };
+            document.body.appendChild(script);
+        });
+    }
+
+    async function verifyOnlineLogin() {
         const driverId = document.getElementById('driverIdInput').value.trim();
         const password = document.getElementById('passInput').value.trim();
         const msgBox = document.getElementById('loginStatusMsg');
@@ -796,11 +855,11 @@
         msgBox.style.color = "var(--primary)";
         msgBox.innerText = "गूगल शीट्स से मिलान हो रहा है...";
 
-        const callbackName = 'loginCallback_' + Math.round(Math.random() * 100000);
-        window[callbackName] = function(response) {
-            delete window[callbackName];
-            if(scriptTag.parentNode) document.body.removeChild(scriptTag);
-            
+        const cbName = 'loginCb_' + Math.round(Math.random() * 1000000);
+        const requestUrl = `${SCRIPT_URL}?action=login&driverId=${encodeURIComponent(driverId)}&password=${encodeURIComponent(password)}&deviceId=${encodeURIComponent(deviceId)}&callback=${cbName}`;
+
+        try {
+            const response = await makeJsonpRequest(requestUrl, cbName);
             if(response && response.status === 'success') {
                 msgBox.style.color = "var(--success)";
                 msgBox.innerText = "लॉगिन सफल!";
@@ -810,27 +869,18 @@
                     document.getElementById('loginSection').classList.add('hidden');
                     document.getElementById('appSection').classList.remove('hidden');
                     initApp();
-                }, 800);
+                }, 600);
             } else {
                 msgBox.style.color = "var(--danger)";
                 msgBox.innerText = response.message || "गलत ड्राइवर आईडी या पासवर्ड!";
             }
-        };
-
-        const scriptTag = document.createElement('script');
-        scriptTag.src = `${SCRIPT_URL}?action=login&driverId=${encodeURIComponent(driverId)}&password=${encodeURIComponent(password)}&deviceId=${encodeURIComponent(deviceId)}&callback=${callbackName}`;
-        
-        scriptTag.onerror = function() {
-            delete window[callbackName];
-            if(scriptTag.parentNode) document.body.removeChild(scriptTag);
+        } catch (err) {
             msgBox.style.color = "var(--danger)";
-            msgBox.innerText = "सर्वर से संपर्क नहीं हो पाया (इंटरनेट कनेक्शन जाँचें)!";
-        };
-
-        document.body.appendChild(scriptTag);
+            msgBox.innerText = "सर्वर से संपर्क नहीं हो पाया: " + err.message;
+        }
     }
 
-    function registerNewDriver() {
+    async function registerNewDriver() {
         const driverId = document.getElementById('driverIdInput').value.trim();
         const password = document.getElementById('passInput').value.trim();
         const mobile = document.getElementById('mobileInput').value.trim();
@@ -845,11 +895,11 @@
         msgBox.style.color = "var(--primary)";
         msgBox.innerText = "रजिस्ट्रेशन किया जा रहा है...";
 
-        const callbackName = 'regCallback_' + Math.round(Math.random() * 100000);
-        window[callbackName] = function(response) {
-            delete window[callbackName];
-            if(scriptTag.parentNode) document.body.removeChild(scriptTag);
-            
+        const cbName = 'regCb_' + Math.round(Math.random() * 1000000);
+        const requestUrl = `${SCRIPT_URL}?action=register&driverId=${encodeURIComponent(driverId)}&password=${encodeURIComponent(password)}&mobile=${encodeURIComponent(mobile)}&shopName=${encodeURIComponent(shopSettings.shopName)}&callback=${cbName}`;
+
+        try {
+            const response = await makeJsonpRequest(requestUrl, cbName);
             if(response && response.status === 'success') {
                 msgBox.style.color = "var(--success)";
                 msgBox.innerText = "रजिस्ट्रेशन सफल! अब आप लॉगिन कर सकते हैं।";
@@ -857,19 +907,10 @@
                 msgBox.style.color = "var(--danger)";
                 msgBox.innerText = response.message || "रजिस्ट्रेशन विफल रहा!";
             }
-        };
-
-        const scriptTag = document.createElement('script');
-        scriptTag.src = `${SCRIPT_URL}?action=register&driverId=${encodeURIComponent(driverId)}&password=${encodeURIComponent(password)}&mobile=${encodeURIComponent(mobile)}&shopName=${encodeURIComponent(shopSettings.shopName)}&callback=${callbackName}`;
-        
-        scriptTag.onerror = function() {
-            delete window[callbackName];
-            if(scriptTag.parentNode) document.body.removeChild(scriptTag);
+        } catch (err) {
             msgBox.style.color = "var(--danger)";
             msgBox.innerText = "नेटवर्क त्रुटि! रजिस्ट्रेशन संभव नहीं है।";
-        };
-
-        document.body.appendChild(scriptTag);
+        }
     }
 
     async function forgotPassword() {
@@ -885,31 +926,22 @@
         msgBox.style.color = "var(--primary)";
         msgBox.innerText = "अनुरोध भेजा जा रहा है...";
 
-        const callbackName = 'fpCallback_' + Math.round(Math.random() * 100000);
-        window[callbackName] = function(response) {
-            delete window[callbackName];
-            if(scriptTag.parentNode) document.body.removeChild(scriptTag);
-            
+        const cbName = 'fpCb_' + Math.round(Math.random() * 1000000);
+        const requestUrl = `${SCRIPT_URL}?action=forgotPassword&driverId=${encodeURIComponent(driverId)}&mobile=${encodeURIComponent(mobile)}&callback=${cbName}`;
+
+        try {
+            const response = await makeJsonpRequest(requestUrl, cbName);
             if(response && response.status === 'success') {
                 msgBox.style.color = "var(--success)";
-                msgBox.innerText = "पासवर्ड रिकवरी का अनुरोध सफलतापर्वक भेज दिया गया है।";
+                msgBox.innerText = response.message || "पासवर्ड रिकवरी अनुरोध पूरा हुआ।";
             } else {
                 msgBox.style.color = "var(--danger)";
                 msgBox.innerText = response.message || "आईडी या मोबाइल नंबर मेल नहीं खा रहा!";
             }
-        };
-
-        const scriptTag = document.createElement('script');
-        scriptTag.src = `${SCRIPT_URL}?action=forgotPassword&driverId=${encodeURIComponent(driverId)}&mobile=${encodeURIComponent(mobile)}&callback=${callbackName}`;
-        
-        scriptTag.onerror = function() {
-            delete window[callbackName];
-            if(scriptTag.parentNode) document.body.removeChild(scriptTag);
+        } catch (err) {
             msgBox.style.color = "var(--danger)";
             msgBox.innerText = "नेटवर्क त्रुटि!";
-        };
-
-        document.body.appendChild(scriptTag);
+        }
     }
 
     function logout() {
